@@ -20,6 +20,7 @@ class Page {
 
 		// create the Tpl object
 		Tpl ::configure($config);
+
 		$this -> tpl = new Tpl;
 
 		$this -> setData($this -> options["data"] );
