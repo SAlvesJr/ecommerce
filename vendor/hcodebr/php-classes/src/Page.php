@@ -19,7 +19,7 @@ class Page {
 		   );
 
 		// create the Tpl object
-		Tpl ::configure($config);
+		Tpl::configure($config);
 
 		$this -> tpl = new Tpl;
 
