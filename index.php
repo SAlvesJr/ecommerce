@@ -261,6 +261,15 @@ $app -> post("/admin/categories/:idcategory", function($idcategory){
 
 });
 
+$app -> get("/categories/:idrecovery", function($idrecovery){
+	$category = new Category();
+
+	$category->get((int)$idrecovery );
+
+	$page = new Page();
+	$page -> setTpl("category", ["category" => $category -> getValues(), "products" => [] ]);
+});
+
 
 $app->run();
 
