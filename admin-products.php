@@ -31,6 +31,8 @@ $app -> post("/admin/products/create", function(){
 	$products -> setData($_POST);
 
 	$products -> save();
+	
+	if($_FILES["file"]["name"] !== "") $product->setPhoto($_FILES['file']);
 
 	header("Location: /admin/products");
 	exit;
@@ -57,9 +59,11 @@ $app -> post("/admin/products/:idproduct", function($idproduct){
 
 	$product -> setData($product);
 
+	if($_FILES["file"]["name"] !== "") $product->setPhoto($_FILES["file"]);
+
 	$product ->  save();
 
-	$product -> setPhoto($_FILES["file"]);
+	//$product -> setPhoto($_FILES["file"]);
 
 	header("Location: /admin/products");
 	exit;
