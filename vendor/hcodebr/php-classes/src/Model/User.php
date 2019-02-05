@@ -11,27 +11,31 @@ class User extends Model {
 	const SECRET = "senhaContem16Car";
 
 
-	static function getFromSession(){
-		$user =  new User();
-
-		if (isset($_SESSION[User::SESSION]) && (int)$_SESSION[User::SESSION]["iduser"] > 0 ) {
-			$user -> setData($_SESSION[User::SESSION]);
+	public static function getFromSession()
+	{
+		$user = new User();
+		if (isset($_SESSION[User::SESSION]) && (int)$_SESSION[User::SESSION]['iduser'] > 0) {
+			$user->setData($_SESSION[User::SESSION]);
 		}
 		return $user;
 	}
-
-	static function checkLogin($inadmin = true){
-		if (!isset($_SESSION[User::SESSION] ) ||
-			!$_SESSION[User::SESSION] ||
-			!(int)$_SESSION[User::SESSION]["iduser"] > 0 ){
-
+	public static function checkLogin($inadmin = true)
+	{
+		if (
+			!isset($_SESSION[User::SESSION])
+			||
+			!$_SESSION[User::SESSION]
+			||
+			!(int)$_SESSION[User::SESSION]["iduser"] > 0
+		) {
+			//Não está logado
 			return false;
-		}else{
-			if ($inadmin === true && (bool)$_SESSION[User::SESSION]["inadmin"] === true ) {
+		} else {
+			if ($inadmin === true && (bool)$_SESSION[User::SESSION]['inadmin'] === true) {
 				return true;
-			}else if($inadmin === false){
+			} else if ($inadmin === false) {
 				return true;
-			}else{
+			} else {
 				return false;
 			}
 		}
