@@ -83,6 +83,7 @@ class Cart extends Model {
 		]);
 		$this->getCalculateTotal();
 	}
+
 	public function removeProduct(Product $product, $all = false)
 	{
 		$sql = new Sql();
