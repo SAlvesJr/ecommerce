@@ -14,7 +14,7 @@ class User extends Model {
 	const SUCCESS = "UserSucesss";
 
 
-	public static function getFromSession()
+	static function getFromSession()
 	{
 		$user = new User();
 		if (isset($_SESSION[User::SESSION]) && (int)$_SESSION[User::SESSION]['iduser'] > 0) {
@@ -23,7 +23,7 @@ class User extends Model {
 		return $user;
 	}
 
-	public static function checkLogin($inadmin = true){
+	static function checkLogin($inadmin = true){
 		if (
 			!isset($_SESSION[User::SESSION])
 			||
@@ -44,35 +44,31 @@ class User extends Model {
 		}
 	}
 
-	static function login($login, $password)	{
+	static function login($login, $password)
+	{
 		$sql = new Sql();
+		$results = $sql->select("SELECT * FROM tb_users a INNER JOIN tb_persons b ON a.idperson = b.idperson WHERE a.deslogin = :LOGIN", array(	":LOGIN"=>$login) ); 
 
-		$result = $sql -> select("SELECT * FROM tb_users WHERE deslogin = :LOGIN", array(":LOGIN" => $login ) );
-
-		if (count($result ) === 0 ) {
-			throw new \Exception("Usuário ou Senha incoreto");
+		if (count($results) === 0)	{
+			throw new \Exception("Usuário inexistente ou senha inválida.");
 		}
 
-		$data = $result[0];
+		$data = $results[0];
 
-		if (password_verify($password, $data["despassword"]) === true ) {
+		if (password_verify($password, $data["despassword"]) === true) 		{
 			$user = new User();
 
 			$data['desperson'] = utf8_encode($data['desperson']);
-
-			$user -> setData( $data );
 			
-			$_SESSION[User::SESSION] = $user -> getValues();
-
+			$user->setData($data);
+			$_SESSION[User::SESSION] = $user->getValues();
 			return $user;
-
-		}else{
-			throw new \Exception("Usuário inexistente ou senha inválida");
-			
+		} else {
+			throw new \Exception("Usuário inexistente ou senha inválida.");
 		}
 	}
 
-	public static function verifyLogin($inadmin = true)	{
+	static function verifyLogin($inadmin = true){
 		if (!User::checkLogin($inadmin)) {
 			if ($inadmin) {
 				header("Location: /admin/login");
@@ -237,11 +233,35 @@ class User extends Model {
 	}
 
 
-	public static function getPasswordHash($password){
+	static function getPasswordHash($password){
 		return password_hash($password, PASSWORD_DEFAULT, [
 			'cost'=>12
 		]);
 	}
+
+	static function setErrorRegister($msg) 	{
+		$_SESSION[User::ERROR_REGISTER] = $msg;
+	}
+
+	static function getErrorRegister() 	{
+		$msg = (isset($_SESSION[User::ERROR_REGISTER]) && $_SESSION[User::ERROR_REGISTER]) ? $_SESSION[User::ERROR_REGISTER] : '';
+
+		User::clearErrorRegister();
+		return $msg;
+	}
+
+	static function clearErrorRegister()	{
+		$_SESSION[User::ERROR_REGISTER] = NULL;
+	}
+
+	static function checkLoginExist($login)	{
+		$sql = new Sql();
+		$results = $sql->select("SELECT * FROM tb_users WHERE deslogin = :deslogin", [
+			':deslogin' => $login
+		]);
+		return (count($results) > 0);
+	}
+
 
 }
 
