@@ -263,6 +263,20 @@ class User extends Model {
 		return (count($results) > 0);
 	}
 
+	static function setSuccess($msg)	{
+		$_SESSION[User::SUCCESS] = $msg;
+	}
+
+	static function getSuccess(){
+		$msg = (isset($_SESSION[User::SUCCESS]) && $_SESSION[User::SUCCESS]) ? $_SESSION[User::SUCCESS] : '';
+		User::clearSuccess();
+		return $msg;
+	}
+
+	static function clearSuccess()	{
+		$_SESSION[User::SUCCESS] = NULL;
+	}
+
 
 }
 
