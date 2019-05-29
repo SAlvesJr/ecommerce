@@ -12,7 +12,8 @@ class Cart extends Model {
 	const SESSION = "Cart";
 	const SESSION_ERROR = "CartError";
 
-	static function getFromSession(){
+	public static function getFromSession()
+	{
 
 		$cart = new Cart();
 
@@ -53,13 +54,15 @@ class Cart extends Model {
 
 	}
 
-	function setToSession(){
+	public function setToSession()
+	{
 
 		$_SESSION[Cart::SESSION] = $this->getValues();
 
 	}
 
-	function getFromSessionID(){
+	public function getFromSessionID()
+	{
 
 		$sql = new Sql();
 
@@ -75,7 +78,8 @@ class Cart extends Model {
 
 	}	
 
-	function get(int $idcart){
+	public function get(int $idcart)
+	{
 
 		$sql = new Sql();
 
@@ -91,7 +95,8 @@ class Cart extends Model {
 
 	}
 
-	function save()	{
+	public function save()
+	{
 
 		$sql = new Sql();
 
@@ -108,7 +113,8 @@ class Cart extends Model {
 
 	}
 
-	function addProduct(Product $product){
+	public function addProduct(Product $product)
+	{
 
 		$sql = new Sql();
 
@@ -121,7 +127,8 @@ class Cart extends Model {
 
 	}
 
-	function removeProduct(Product $product, $all = false){
+	public function removeProduct(Product $product, $all = false)
+	{
 
 		$sql = new Sql();
 
@@ -145,7 +152,8 @@ class Cart extends Model {
 
 	}
 
-	function getProducts(){
+	public function getProducts()
+	{
 
 		$sql = new Sql();
 
@@ -164,7 +172,8 @@ class Cart extends Model {
 
 	}
 
-	function getProductsTotals(){
+	public function getProductsTotals()
+	{
 
 		$sql = new Sql();
 
@@ -185,7 +194,8 @@ class Cart extends Model {
 
 	}
 
-	function setFreight($nrzipcode)	{
+	public function setFreight($nrzipcode)
+	{
 
 		$nrzipcode = str_replace('-', '', $nrzipcode);
 
@@ -243,20 +253,23 @@ class Cart extends Model {
 
 	}
 
-	static function formatValueToDecimal($value):float	{
+	public static function formatValueToDecimal($value):float
+	{
 
 		$value = str_replace('.', '', $value);
 		return str_replace(',', '.', $value);
 
 	}
 
-	static function setMsgError($msg){
+	public static function setMsgError($msg)
+	{
 
 		$_SESSION[Cart::SESSION_ERROR] = $msg;
 
 	}
 
-	static function getMsgError(){
+	public static function getMsgError()
+	{
 
 		$msg = (isset($_SESSION[Cart::SESSION_ERROR])) ? $_SESSION[Cart::SESSION_ERROR] : "";
 
@@ -266,13 +279,15 @@ class Cart extends Model {
 
 	}
 
-	static function clearMsgError()	{
+	public static function clearMsgError()
+	{
 
 		$_SESSION[Cart::SESSION_ERROR] = NULL;
 
 	}
 
-	function updateFreight(){
+	public function updateFreight()
+	{
 
 		if ($this->getdeszipcode() != '') {
 
@@ -282,7 +297,8 @@ class Cart extends Model {
 
 	}
 
-	function getValues(){
+	public function getValues()
+	{
 
 		$this->getCalculateTotal();
 
@@ -290,7 +306,8 @@ class Cart extends Model {
 
 	}
 
-	function getCalculateTotal(){
+	public function getCalculateTotal()
+	{
 
 		$this->updateFreight();
 
