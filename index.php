@@ -8,6 +8,7 @@ use \Slim\Slim;
 $app = new Slim();
 
 $app->config('debug', true);
+require_once ("function.php");
 
 require_once ("site.php");
 
@@ -19,8 +20,7 @@ require_once ("admin-categories.php");
 
 require_once ("admin-products.php");
 
-require_once ("function.php");
-
+require_once ("admin-orders.php");
 
 $app->run();
 
