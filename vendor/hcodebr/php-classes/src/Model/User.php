@@ -138,7 +138,7 @@ class User extends Model {
 
 	function delete(){
 		$sql = new Sql();
-		$sql -> query("CALL sp_users_delete(:iduser)", array( ":iduser" => $this -> getiduser() ));
+		$sql -> query("CALL sp_users_delete(:iduser)", array( ":iduser" => $this->getiduser() ) );
 	}
 
 	static function getForgot($email, $inadmin = true){
@@ -291,6 +291,51 @@ class User extends Model {
 
 		return $results;
 			
+	}
+
+	static function getPage($page = 1, $itemsPerPage = 10){
+		$start = ($page -1 )* $itemsPerPage;
+		$sql = new Sql();
+
+		$result = $sql -> select("
+			SELECT SQL_CALC_FOUND_ROWS *
+			FROM tb_users a 
+			INNER JOIN tb_persons b USING(idperson) 
+			ORDER BY b.desperson
+			LIMIT $start, $itemsPerPage
+			");
+
+		$resultTotal = $sql-> select("SELECT FOUND_ROWS() AS nrtoral;");
+
+		return [
+			"data"=> $result,
+			"total" =>(int)$resultTotal[0]["nrtoral"], 
+			"page"=>ceil($resultTotal[0]["nrtoral"] / $itemsPerPage ) 
+		];
+	}
+
+	static function getPageSearch($search, $page = 1, $itemsPerPage = 10){
+		$start = ($page -1 )* $itemsPerPage;
+		$sql = new Sql();
+
+		$result = $sql -> select("
+			SELECT SQL_CALC_FOUND_ROWS *
+			FROM tb_users a 
+			INNER JOIN tb_persons b USING(idperson) 
+			WHERE b.desperson LIKE :search OR b.desemail = :search OR a.deslogin LIKE :search
+			ORDER BY b.desperson
+			LIMIT $start, $itemsPerPage
+			", [
+				":search" => "%".$search."%"
+			]);
+
+		$resultTotal = $sql-> select("SELECT FOUND_ROWS() AS nrtoral;");
+
+		return [
+			"data"=> $result,
+			"total" =>(int)$resultTotal[0]["nrtoral"], 
+			"page"=>ceil($resultTotal[0]["nrtoral"] / $itemsPerPage ) 
+		];
 	}
 
 
