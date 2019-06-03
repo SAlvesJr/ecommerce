@@ -116,6 +116,49 @@ class Category extends Model {
 		$sql -> query("DELETE FROM tb_productscategories WHERE idcategory = :idcategory AND idproduct = :idproduct ", [":idcategory"  => $this->getidcategory(), ":idproduct" => $product->getidproduct() ] );
 	}
 
+	static function getPage($page = 1, $itemsPerPage = 10){
+		$start = ($page -1 )* $itemsPerPage;
+		$sql = new Sql();
+
+		$result = $sql -> select("
+			SELECT SQL_CALC_FOUND_ROWS *
+			FROM tb_categories 
+			ORDER BY descategory
+			LIMIT $start, $itemsPerPage
+			");
+
+		$resultTotal = $sql-> select("SELECT FOUND_ROWS() AS nrtoral;");
+
+		return [
+			"data"=> $result,
+			"total" =>(int)$resultTotal[0]["nrtoral"], 
+			"page"=>ceil($resultTotal[0]["nrtoral"] / $itemsPerPage ) 
+		];
+	}
+
+	static function getPageSearch($search, $page = 1, $itemsPerPage = 10){
+		$start = ($page -1 )* $itemsPerPage;
+		$sql = new Sql();
+
+		$result = $sql -> select("
+			SELECT SQL_CALC_FOUND_ROWS *
+			FROM tb_categories 
+			WHERE descategory :search
+			ORDER BY descategory			
+			LIMIT $start, $itemsPerPage
+			", [
+				":search" => "%".$search."%"
+			]);
+
+		$resultTotal = $sql-> select("SELECT FOUND_ROWS() AS nrtoral;");
+
+		return [
+			"data"=> $result,
+			"total" =>(int)$resultTotal[0]["nrtoral"], 
+			"page"=>ceil($resultTotal[0]["nrtoral"] / $itemsPerPage ) 
+		];
+	}
+
 }
 
 

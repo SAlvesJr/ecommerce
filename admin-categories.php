@@ -1,24 +1,40 @@
 <?php 
 
 use Hcode\PageAdmin;
-
-use Hcode\Page;
-
 use Hcode\Model\User;
-
 use Hcode\Model\Category;
-
 use Hcode\Model\Product;
 
 $app -> get("/admin/categories", function(){
 
 	User::verifyLogin();
 
-	$categories = Category::listAll();
+	$search = (isset( $_GET["search"])) ? $_GET["search"] : "";	
+	$page = (isset( $_GET["page"])) ? (int)$_GET["page"] : 1;
+
+	
+	if ($search != "") {
+		$pagination = Category::getPageSearch($search, $page);
+	} else {
+		$pagination = Category::getPage($page);
+	}
+
+	$pages = [];
+
+	for ($i=1; $i <= $pagination["page"]; $i++) { 
+		array_push(
+			$pages, [
+				"href" => "/admin/users?". http_build_query([
+					"page" => $i,
+					"search" => $search
+				]),
+				"text" => $i
+			]);
+	}
 
 	$page = new PageAdmin();
 
-	$page ->setTpl("categories", ["categories" => $categories ]);
+	$page ->setTpl("categories", ["categories" => $pagination["data"], "search" => $search, "pages" => $pages ]);
 });
 
 $app -> get("/admin/categories/create", function(){
