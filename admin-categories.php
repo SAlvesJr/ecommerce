@@ -24,7 +24,7 @@ $app -> get("/admin/categories", function(){
 	for ($i=1; $i <= $pagination["page"]; $i++) { 
 		array_push(
 			$pages, [
-				"href" => "/admin/users?". http_build_query([
+				"href" => "/admin/categories?". http_build_query([
 					"page" => $i,
 					"search" => $search
 				]),
