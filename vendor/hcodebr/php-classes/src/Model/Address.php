@@ -42,16 +42,17 @@ class Address extends Model {
 
 	function save(){
 		$sql = new Sql();
-		$results = $sql->select("CALL sp_addresses_save(:idaddress, :idperson, :desaddress, :descomplement, :descity, :desstate, :descountry, :deszipcode, :desdistrict)", [
-			':idaddress'=>$this->getidaddress(),
-			':idperson'=>$this->getidperson(),
-			':desaddress'=>$this->getdesaddress(),
+		$results = $sql->select("CALL sp_addresses_save(:idaddress, :idperson, :desaddress, :desnumber, :descomplement, :descity, :desstate, :descountry, :deszipcode, :desdistrict)", [
+			':idaddress' =>$this->getidaddress(),
+			':idperson' =>$this->getidperson(),
+			':desaddress' =>$this->getdesaddress(),
+			':desnumber' => $this->getdesnumber(),
 			':descomplement'=>$this->getdescomplement(),
-			':descity'=>$this->getdescity(),
-			':desstate'=>$this->getdesstate(),
-			':descountry'=>$this->getdescountry(),
-			':deszipcode'=>$this->getdeszipcode(),
-			':desdistrict'=>$this->getdesdistrict()
+			':descity' =>$this->getdescity(),
+			':desstate' =>$this->getdesstate(),
+			':descountry' =>$this->getdescountry(),
+			':deszipcode' =>$this->getdeszipcode(),
+			':desdistrict' =>$this->getdesdistrict()
 		]);
 
 		if (count($results) > 0) {
